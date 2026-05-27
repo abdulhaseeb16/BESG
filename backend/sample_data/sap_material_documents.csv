@@ -1,0 +1,7 @@
+MaterialDocument,MaterialDocumentItem,PostingDate,Plant,Material,MaterialDescription,Quantity,Unit,AmountInCompanyCodeCurrency,Currency,PurchaseOrder
+4900002311,1,2026-01-08,1000,FUEL-DIESEL,Diesel fuel for backup generators,12500,L,14250,USD,4500008821
+4900002312,1,09.01.2026,2000,FUEL-PETROL,Petrol for company fleet,900,GAL,4100,USD,4500008822
+4900002313,1,2026-01-15,1000,MRO-BEARING,Replacement bearing kit,4,EA,1800,USD,4500008823
+4900002314,1,2026-01-20,9999,FUEL-DIESEL,Diesel fuel unmapped plant,600,L,720,USD,4500008824
+4900002315,1,2026-01-21,1000,MRO-ROBOT,Robotic line maintenance contract,1,EA,325000,USD,4500008825
+

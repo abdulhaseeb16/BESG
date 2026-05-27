@@ -1,0 +1,57 @@
+{
+  "trips": [
+    {
+      "trip_id": "TRIP-2026-017",
+      "traveler": "Asha Mehta",
+      "segments": [
+        {
+          "id": "AIR-9001",
+          "type": "flight",
+          "date": "2026-02-04",
+          "origin": "BLR",
+          "destination": "DEL",
+          "distance_km": 1700,
+          "description": "Bengaluru to Delhi client workshop"
+        },
+        {
+          "id": "HOTEL-2201",
+          "type": "hotel",
+          "check_in": "2026-02-04",
+          "check_out": "2026-02-07",
+          "room_nights": 3,
+          "description": "Delhi hotel stay"
+        },
+        {
+          "id": "GROUND-7781",
+          "type": "ground",
+          "date": "2026-02-05",
+          "distance": 42,
+          "unit": "km",
+          "description": "Airport and client site taxis"
+        }
+      ]
+    },
+    {
+      "trip_id": "TRIP-2026-021",
+      "traveler": "Nikhil Rao",
+      "segments": [
+        {
+          "id": "AIR-9002",
+          "type": "flight",
+          "date": "2026-02-12",
+          "origin": "BLR",
+          "destination": "ZZZ",
+          "description": "Flight segment with unknown airport code"
+        },
+        {
+          "id": "GROUND-7782",
+          "type": "ground",
+          "date": "2026-02-12",
+          "distance": 18,
+          "unit": "mi",
+          "description": "Rental car mileage"
+        }
+      ]
+    }
+  ]
+}
