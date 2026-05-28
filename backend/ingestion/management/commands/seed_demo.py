@@ -16,7 +16,13 @@ class Command(BaseCommand):
         User = get_user_model()
         User.objects.update_or_create(
             username="analyst@breathe.demo",
-            defaults={"email": "analyst@breathe.demo", "is_staff": True, "is_superuser": True},
+            defaults={
+                "email": "analyst@breathe.demo",
+                "first_name": "Asha",
+                "last_name": "Mehta",
+                "is_staff": True,
+                "is_superuser": True,
+            },
         )
         user = User.objects.get(username="analyst@breathe.demo")
         user.set_password("breathe-demo")
@@ -94,4 +100,3 @@ class Command(BaseCommand):
         import_concur_json(concur_batch, load_sample_concur_payload(sample_dir / "concur_itineraries.json"))
 
         self.stdout.write(self.style.SUCCESS("Seeded demo data for analyst@breathe.demo / breathe-demo"))
-

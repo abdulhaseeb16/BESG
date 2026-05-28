@@ -14,6 +14,7 @@ function App() {
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const [currentUser, setCurrentUser] = useState({ display_name: "Demo Analyst", initials: "A" });
 
   const query = useMemo(() => {
     const params = new URLSearchParams();
@@ -43,9 +44,23 @@ function App() {
     }
   }
 
+  async function loadCurrentUser() {
+    try {
+      const res = await fetch(`${API_BASE}/me/`);
+      if (!res.ok) return;
+      setCurrentUser(await res.json());
+    } catch {
+      setCurrentUser({ display_name: "Demo Analyst", initials: "A" });
+    }
+  }
+
   useEffect(() => {
     refresh();
   }, [query]);
+
+  useEffect(() => {
+    loadCurrentUser();
+  }, []);
 
   async function upload(kind, file) {
     if (!file) return;
@@ -94,7 +109,7 @@ function App() {
         <header className="portal-header">
           <div>
             <p className="eyebrow">Breathe ESG - Portal</p>
-            <h1>Hello, Analyst [Full Name] - ESG Review Center</h1>
+            <h1>Hello, {currentUser.display_name} - ESG Review Center</h1>
           </div>
           <div className="header-actions">
             <button className="icon-button ghost" onClick={refresh} title="Refresh dashboard">
@@ -103,8 +118,8 @@ function App() {
             <button className="icon-button ghost" title="Notifications">
               <Bell size={18} />
             </button>
-            <div className="avatar">A</div>
-            <span>Hello, [Analyst Name]</span>
+            <div className="avatar">{currentUser.initials}</div>
+            <span>Hello, {currentUser.display_name}</span>
           </div>
         </header>
 

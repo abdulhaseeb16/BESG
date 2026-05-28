@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.db.models import Count, Q
 from rest_framework import status, viewsets
 from rest_framework.decorators import action, api_view
@@ -15,12 +16,33 @@ def api_root(request):
         {
             "message": "Breathe ESG ingestion review API",
             "endpoints": {
+                "me": "/api/me/",
                 "tenants": "/api/tenants/",
                 "sources": "/api/sources/",
                 "activities": "/api/activities/",
                 "batches": "/api/batches/",
                 "summary": "/api/summary/",
             },
+        }
+    )
+
+
+@api_view(["GET"])
+def current_user(request):
+    if request.user.is_authenticated:
+        display_name = request.user.get_full_name() or request.user.email or request.user.username
+        email = request.user.email
+    else:
+        demo_user = get_user_model().objects.filter(username="analyst@breathe.demo").first()
+        display_name = demo_user.get_full_name() if demo_user else "Demo Analyst"
+        email = demo_user.email if demo_user else "analyst@breathe.demo"
+    initials = "".join(part[0] for part in display_name.split()[:2]).upper() or "A"
+    return Response(
+        {
+            "display_name": display_name,
+            "email": email,
+            "initials": initials,
+            "is_authenticated": request.user.is_authenticated,
         }
     )
 
