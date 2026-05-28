@@ -648,6 +648,18 @@ body {
   max-width: 138px;
 }
 
+.error-banner {
+  align-items: center;
+  background: #fff0cc;
+  border-top: 1px solid rgba(201, 140, 18, 0.28);
+  color: #7d5300;
+  display: flex;
+  font-size: 13px;
+  font-weight: 700;
+  gap: 8px;
+  padding: 10px 14px;
+}
+
 .table-wrap {
   border: 0;
   border-radius: 0;
@@ -664,6 +676,26 @@ th {
 td {
   font-size: 12px;
   padding: 8px 10px;
+}
+
+.empty-table-state {
+  align-items: center;
+  color: var(--muted);
+  display: grid;
+  gap: 8px;
+  justify-items: center;
+  min-height: 220px;
+  padding: 24px;
+  text-align: center;
+}
+
+.empty-table-state strong {
+  color: var(--ink);
+  font-size: 16px;
+}
+
+.empty-table-state button {
+  margin-top: 4px;
 }
 
 .right-pane {

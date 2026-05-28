@@ -13,6 +13,7 @@ function App() {
   const [filters, setFilters] = useState({ source: "", status: "", scope: "", flag: "", search: "" });
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
 
   const query = useMemo(() => {
     const params = new URLSearchParams();
@@ -21,14 +22,25 @@ function App() {
   }, [filters]);
 
   async function refresh() {
-    const [summaryRes, recordsRes, batchesRes] = await Promise.all([
-      fetch(`${API_BASE}/summary/`),
-      fetch(`${API_BASE}/activities/${query ? `?${query}` : ""}`),
-      fetch(`${API_BASE}/batches/`),
-    ]);
-    setSummary(await summaryRes.json());
-    setRecords(await recordsRes.json());
-    setBatches(await batchesRes.json());
+    try {
+      setError("");
+      const [summaryRes, recordsRes, batchesRes] = await Promise.all([
+        fetch(`${API_BASE}/summary/`),
+        fetch(`${API_BASE}/activities/${query ? `?${query}` : ""}`),
+        fetch(`${API_BASE}/batches/`),
+      ]);
+      if (!summaryRes.ok || !recordsRes.ok || !batchesRes.ok) {
+        throw new Error("API returned an error while loading review data.");
+      }
+      const [summaryData, recordsData, batchesData] = await Promise.all([summaryRes.json(), recordsRes.json(), batchesRes.json()]);
+      setSummary(summaryData);
+      setRecords(Array.isArray(recordsData) ? recordsData : []);
+      setBatches(Array.isArray(batchesData) ? batchesData : []);
+    } catch (loadError) {
+      setError(`${loadError.message} Confirm the Django backend is running on port 8000.`);
+      setRecords([]);
+      setBatches([]);
+    }
   }
 
   useEffect(() => {
@@ -105,7 +117,8 @@ function App() {
                 <h2>Multi-Tenant Data Ingestion Status</h2>
                 <FilterBar filters={filters} setFilters={setFilters} />
               </div>
-              <RecordTable records={records} selected={selected} setSelected={setSelected} />
+              {error && <div className="error-banner"><TriangleAlert size={16} /> {error}</div>}
+              <RecordTable records={records} selected={selected} setSelected={setSelected} seed={seed} busy={busy} />
             </section>
           </section>
           <aside className="right-pane">
@@ -228,7 +241,7 @@ function FilterBar({ filters, setFilters }) {
   );
 }
 
-function RecordTable({ records, selected, setSelected }) {
+function RecordTable({ records, selected, setSelected, seed, busy }) {
   return (
     <section className="table-wrap">
       <table>
@@ -245,6 +258,21 @@ function RecordTable({ records, selected, setSelected }) {
           </tr>
         </thead>
         <tbody>
+          {!records.length && (
+            <tr>
+              <td colSpan="8">
+                <div className="empty-table-state">
+                  <Database size={22} />
+                  <strong>No ingestion records loaded</strong>
+                  <span>Start the Django backend, then reset demo data or upload a source file.</span>
+                  <button onClick={seed} disabled={busy}>
+                    <RefreshCw size={16} />
+                    Reset Demo
+                  </button>
+                </div>
+              </td>
+            </tr>
+          )}
           {records.map((record) => (
             <tr key={record.id} className={selected?.id === record.id ? "selected" : ""} onClick={() => setSelected(record)}>
               <td>
