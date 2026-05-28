@@ -67,7 +67,7 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
-STATICFILES_DIRS = [path for path in [BASE_DIR / "static" / "frontend", ROOT_DIR / "frontend" / "dist"] if path.exists()]
+STATICFILES_DIRS = [("frontend", path) for path in [BASE_DIR / "static" / "frontend", ROOT_DIR / "frontend" / "dist"] if path.exists()]
 STORAGES = {
     "staticfiles": {
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
