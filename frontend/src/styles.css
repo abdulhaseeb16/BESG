@@ -599,14 +599,22 @@ body,
   min-width: 0;
 }
 
+.left-pane {
+  align-content: start;
+  align-items: start;
+  grid-auto-rows: max-content;
+}
+
 .stats-grid {
   grid-template-columns: repeat(3, minmax(0, 1fr));
+  height: auto;
 }
 
 .stat {
   box-shadow: 0 10px 24px rgba(23, 107, 87, 0.12);
   grid-template-columns: 1fr auto;
-  min-height: 92px;
+  height: 114px;
+  min-height: 0;
   position: relative;
 }
 
@@ -638,6 +646,7 @@ body,
 
 .import-band {
   box-shadow: 0 8px 20px rgba(23, 107, 87, 0.08);
+  min-height: 80px;
 }
 
 .review-card {
@@ -646,6 +655,7 @@ body,
   border-radius: 8px;
   box-shadow: 0 12px 26px rgba(23, 107, 87, 0.11);
   overflow: hidden;
+  align-self: start;
 }
 
 .review-card-head {
@@ -692,6 +702,9 @@ body,
 .table-wrap {
   border: 0;
   border-radius: 0;
+  max-height: calc(100vh - 452px);
+  min-height: 320px;
+  overflow: auto;
 }
 
 table {
@@ -713,7 +726,7 @@ td {
   display: grid;
   gap: 8px;
   justify-items: center;
-  min-height: 220px;
+  min-height: 260px;
   padding: 24px;
   text-align: center;
 }
