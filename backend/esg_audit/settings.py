@@ -37,7 +37,7 @@ ROOT_URLCONF = "esg_audit.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [BASE_DIR / "templates", BASE_DIR / "static" / "frontend", ROOT_DIR / "frontend" / "dist"],
+        "DIRS": [BASE_DIR / "static" / "frontend", ROOT_DIR / "frontend" / "dist", BASE_DIR / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
