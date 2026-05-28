@@ -202,13 +202,24 @@ function RecordTable({ records, selected, setSelected }) {
         <tbody>
           {records.map((record) => (
             <tr key={record.id} className={selected?.id === record.id ? "selected" : ""} onClick={() => setSelected(record)}>
-              <td><Badge tone={record.status}>{record.status}</Badge></td>
+              <td>
+                <Badge tone={record.status}>{record.status}</Badge>
+                {record.is_locked && <Lock size={14} style={{ marginLeft: "6px", verticalAlign: "middle", color: "var(--accent)" }} />}
+              </td>
               <td>{record.source.kind}</td>
               <td><code>{record.source_row_id}</code></td>
               <td>{record.scope.replace("_", " ")}</td>
-              <td>{record.description}</td>
-              <td>{record.normalized_quantity ?? "-"} {record.normalized_unit}</td>
-              <td>{record.estimated_kg_co2e ?? "-"}</td>
+              <td>
+                <div style={{ fontWeight: 500 }}>{record.description}</div>
+                {record.flags.length > 0 && (
+                  <small style={{ alignItems: "center", color: "var(--yellow)", display: "inline-flex", gap: "4px", marginTop: "4px" }}>
+                    <TriangleAlert size={13} />
+                    {record.flags.length} quality warnings
+                  </small>
+                )}
+              </td>
+              <td><strong>{record.normalized_quantity ?? "-"}</strong> <small>{record.normalized_unit}</small></td>
+              <td>{record.estimated_kg_co2e != null ? `${(record.estimated_kg_co2e / 1000).toFixed(2)} tCO2e` : "-"}</td>
               <td>{record.flags.length ? <Badge tone="flag">{record.flags.length}</Badge> : "-"}</td>
             </tr>
           ))}
@@ -246,6 +257,13 @@ function DetailPanel({ record, review }) {
         <dt>Normalized</dt><dd>{record.normalized_quantity ?? "-"} {record.normalized_unit}</dd>
         <dt>Estimate</dt><dd>{record.estimated_kg_co2e ?? "-"} kgCO2e</dd>
       </dl>
+      <h3>Emission Factor Provenance</h3>
+      <div style={{ background: "#f0eee8", padding: "10px", borderRadius: "6px", fontSize: "12px", color: "var(--ink)", marginTop: "6px", borderLeft: "3px solid var(--accent)" }}>
+        <div>Calculation: {record.normalized_quantity ?? "0"} {record.normalized_unit} × Base Factor → {record.estimated_kg_co2e ?? "-"} kgCO2e</div>
+        <small style={{ color: "var(--muted)", display: "block", marginTop: "6px" }}>
+          Source Tracking: Scope mapped automatically via {record.source.kind} payload parameters.
+        </small>
+      </div>
       <h3>Flags</h3>
       <div className="flag-list">{record.flags.length ? record.flags.map((flag) => <Badge key={flag} tone="flag">{flag}</Badge>) : "No flags"}</div>
       <h3>Raw source payload</h3>
