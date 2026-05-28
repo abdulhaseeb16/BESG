@@ -434,6 +434,14 @@ tbody tr.selected td {
 
 body {
   background: linear-gradient(120deg, #f8fbfb 0%, #eef8f6 48%, #d5f0eb 100%);
+  overflow-x: hidden;
+}
+
+html,
+body,
+#root {
+  max-width: 100%;
+  min-height: 100%;
 }
 
 .app-shell {
@@ -441,6 +449,9 @@ body {
     radial-gradient(circle at 74% 6%, rgba(23, 107, 87, 0.13), transparent 24%),
     linear-gradient(120deg, #fbfdfe 0%, #f2fbf8 52%, #ccece5 100%);
   display: flex;
+  max-width: 100vw;
+  overflow-x: hidden;
+  width: 100%;
 }
 
 .sidebar {
@@ -517,7 +528,9 @@ body {
 
 .portal-main {
   flex: 1;
+  max-width: calc(100vw - 164px);
   min-width: 0;
+  overflow-x: hidden;
 }
 
 .portal-header {
@@ -529,6 +542,7 @@ body {
   display: flex;
   justify-content: space-between;
   min-height: 78px;
+  min-width: 0;
   padding: 18px 24px;
 }
 
@@ -543,6 +557,8 @@ body {
   display: flex;
   font-size: 13px;
   gap: 10px;
+  min-width: 0;
+  white-space: nowrap;
 }
 
 .icon-button.ghost {
@@ -566,8 +582,21 @@ body {
 
 .workspace {
   gap: 16px;
-  grid-template-columns: minmax(0, 1fr) 286px;
+  grid-template-columns: minmax(0, 1fr) clamp(320px, 28vw, 420px);
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: hidden;
   padding: 16px;
+}
+
+.left-pane,
+.right-pane,
+.review-card,
+.table-wrap,
+.detail,
+.batch-list {
+  max-width: 100%;
+  min-width: 0;
 }
 
 .stats-grid {
@@ -701,12 +730,19 @@ td {
 .right-pane {
   align-content: start;
   gap: 12px;
+  overflow: hidden;
 }
 
 .detail {
   border-radius: 0;
   box-shadow: -8px 0 18px rgba(23, 107, 87, 0.08);
   min-height: calc(100vh - 112px);
+  overflow: hidden;
+  width: 100%;
+}
+
+.detail * {
+  min-width: 0;
 }
 
 .detail-head {
@@ -717,9 +753,13 @@ td {
 
 .detail-head h2 {
   font-size: 16px;
+  overflow-wrap: anywhere;
 }
 
 .action-row {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   border-top: 1px solid var(--line);
   bottom: 0;
   background: var(--paper);
@@ -729,8 +769,32 @@ td {
 }
 
 .action-row button {
-  flex: 1;
   justify-content: center;
+  min-width: 0;
+  white-space: nowrap;
+}
+
+.kv {
+  grid-template-columns: minmax(86px, 110px) minmax(0, 1fr);
+}
+
+.kv dd,
+.flag-list,
+.events,
+.events p {
+  overflow-wrap: anywhere;
+}
+
+.flag-list .badge {
+  max-width: 100%;
+  white-space: normal;
+}
+
+pre {
+  max-width: 100%;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 .batch-list {
@@ -768,6 +832,10 @@ tbody tr.selected td:first-child {
   .sidebar {
     min-height: auto;
     position: static;
+  }
+
+  .portal-main {
+    max-width: 100%;
   }
 
   .sidebar nav {
