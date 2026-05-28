@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { createRoot } from "react-dom/client";
-import { Check, Database, FileUp, Filter, Lock, RefreshCw, Search, ShieldCheck, TriangleAlert, X } from "lucide-react";
+import { BarChart3, Bell, Check, ClipboardList, Database, FileText, FileUp, Leaf, Lock, RefreshCw, Search, Settings, ShieldCheck, TriangleAlert, Users, X } from "lucide-react";
 import "./styles.css";
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL || "/api";
@@ -77,48 +77,93 @@ function App() {
 
   return (
     <div className="app-shell">
-      <header className="topbar">
-        <div>
-          <p className="eyebrow">Breathe ESG</p>
-          <h1>Ingestion Review</h1>
-        </div>
-        <button className="icon-button" onClick={refresh} title="Refresh dashboard">
-          <RefreshCw size={18} />
-        </button>
-      </header>
+      <Sidebar />
+      <div className="portal-main">
+        <header className="portal-header">
+          <div>
+            <p className="eyebrow">Breathe ESG - Portal</p>
+            <h1>Hello, Analyst [Full Name] - ESG Review Center</h1>
+          </div>
+          <div className="header-actions">
+            <button className="icon-button ghost" onClick={refresh} title="Refresh dashboard">
+              <RefreshCw size={18} />
+            </button>
+            <button className="icon-button ghost" title="Notifications">
+              <Bell size={18} />
+            </button>
+            <div className="avatar">A</div>
+            <span>Hello, [Analyst Name]</span>
+          </div>
+        </header>
 
-      <main className="workspace">
-        <section className="left-pane">
-          <Stats summary={summary} />
-          <ImportPanel busy={busy} upload={upload} importConcur={importConcur} seed={seed} message={message} />
-          <FilterBar filters={filters} setFilters={setFilters} />
-          <RecordTable records={records} selected={selected} setSelected={setSelected} />
-        </section>
-        <aside className="right-pane">
-          <DetailPanel record={selected} review={review} />
-          <BatchList batches={batches} />
-        </aside>
-      </main>
+        <main className="workspace">
+          <section className="left-pane">
+            <Stats summary={summary} />
+            <ImportPanel busy={busy} upload={upload} importConcur={importConcur} seed={seed} message={message} />
+            <section className="review-card">
+              <div className="review-card-head">
+                <h2>Multi-Tenant Data Ingestion Status</h2>
+                <FilterBar filters={filters} setFilters={setFilters} />
+              </div>
+              <RecordTable records={records} selected={selected} setSelected={setSelected} />
+            </section>
+          </section>
+          <aside className="right-pane">
+            <DetailPanel record={selected} review={review} />
+            <BatchList batches={batches} />
+          </aside>
+        </main>
+      </div>
     </div>
   );
 }
 
-function Stats({ summary }) {
+function Sidebar() {
   const items = [
-    ["Total", summary?.total ?? 0, Database],
-    ["Pending", summary?.pending ?? 0, Filter],
-    ["Suspicious", summary?.suspicious ?? 0, TriangleAlert],
-    ["Approved", summary?.approved ?? 0, ShieldCheck],
-    ["Locked", summary?.locked ?? 0, Lock],
-    ["Failed", summary?.failed ?? 0, X],
+    ["Dashboard", BarChart3],
+    ["Data Streams", Database],
+    ["Compliance Reports", FileText],
+    ["Tenant Manager", Users],
+    ["Audit Logs", ClipboardList],
+    ["Settings", Settings],
+  ];
+  return (
+    <aside className="sidebar">
+      <div className="brand-mark">
+        <div className="leaf-badge"><Leaf size={28} /></div>
+        <strong>BESG</strong>
+      </div>
+      <nav>
+        {items.map(([label, Icon], index) => (
+          <a className={index === 0 ? "active" : ""} href="#" key={label}>
+            <Icon size={16} />
+            {label}
+          </a>
+        ))}
+      </nav>
+      <div className="sidebar-illustration">
+        <Leaf size={54} />
+      </div>
+    </aside>
+  );
+}
+
+function Stats({ summary }) {
+  const total = summary?.total ?? 0;
+  const failed = summary?.failed ?? 0;
+  const integrity = total ? Math.max(0, Math.round(((total - failed) / total) * 100)) : 100;
+  const items = [
+    ["Total Active Tenants", "1", BarChart3, "trend"],
+    ["Data Integrity Score", `${integrity}%`, ShieldCheck, "gauge"],
+    ["Current Pending Audits", summary?.pending ?? 0, TriangleAlert, "alert"],
   ];
   return (
     <section className="stats-grid">
-      {items.map(([label, value, Icon]) => (
-        <div className="stat" key={label}>
-          <Icon size={18} />
+      {items.map(([label, value, Icon, tone]) => (
+        <div className={`stat ${tone}`} key={label}>
           <span>{label}</span>
           <strong>{value}</strong>
+          <Icon size={32} />
         </div>
       ))}
     </section>
